@@ -46,7 +46,7 @@ await conn.sendMessage(from, { image: { url: data.result.data.image}, caption: c
     }
 });
     category: "movie",
-    react: "🍿",
+    react: "🔍",
     filename: __filename
 },
 async (conn, mek, m, { from, q, reply }) => {
