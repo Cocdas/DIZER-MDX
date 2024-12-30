@@ -162,8 +162,8 @@ ${movieDetails.dl_links.map((link, index) =>
                             title: movieDetails.title
                         };
 
-                        // Send download instruction message
-                        /*await conn.sendMessage(from, {
+                 
+                        await conn.sendMessage(from, {
                             text: `
 *🔽 DOWNLOAD OPTIONS*
 
