@@ -12,6 +12,7 @@
     "@whiskeysockets/baileys": "6.6.0",
     "@adiwajshing/keyed-db": "^0.2.4",
     "pino": "^7.0.5",
+    "mrnima-moviedl":"1.0.0",
     "@bochilteam/scraper":"5.0.1",
     "api-dylux": "latest",
     "cheerio": "^1.0.0-rc.12",
