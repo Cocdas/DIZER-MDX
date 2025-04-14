@@ -1,47 +1,54 @@
-const {cmd , commands} = require('../command')
+const { cmd } = require('../command');
+const { fetchJson, getBuffer } = require('../lib/functions');
+
 cmd({
     pattern: "moviedl1",
     react: "📥",
-    description: "movie downloader",
+    description: "Movie downloader",
     use: ".movie kgf",
     filename: __filename
-}, async (conn, mek, m, { from, q, isDev, reply }) => {
-    if (!q) { return await reply('*Please provide a direct URL!*')}
+}, async (conn, mek, m, { from, q, reply }) => {
+
+    if (!q) return reply('*Please provide a movie name!*');
+
     try {
+        const searchRes = await fetchJson(`https://vajira-api.vercel.app/movie/sinhalasub/search?text=${q}`);
+        if (!searchRes?.result?.data?.length) return reply('❌ Movie not found.');
 
-const data0 = await fetchJson(`https://vajira-api.vercel.app/movie/sinhalasub/search?text=${q}`);   
+        const moviePageUrl = searchRes.result.data[0].link;
 
-const data1 = data0.result.data[0].link
-console.log(data1)
+        const movieData = await fetchJson(`https://vajira-api.vercel.app/movie/sinhalasub/movie?url=${moviePageUrl}`);
+        const movie = movieData?.result?.data;
 
-const data = await fetchJson(`https://vajira-api.vercel.app/movie/sinhalasub/movie?url=${data1}`);   	    
-const data2 = data.result.data.pixeldrain_dl[2].link
-console.log(data2)
-    
-const cap = `        
-Title : ${data.result.data.title}
-Date : ${data.result.data.date}
-Country : ${data.result.data.country}
-> *💗𝐏𝐨𝐰𝐞𝐫𝐞𝐝 𝐁𝐲 - : ANGEL 🧚‍*
-`	    
-await conn.sendMessage(from, { image: { url: data.result.data.image}, caption: cap } , { quoted: mek })
+        if (!movie?.pixeldrain_dl?.[2]?.link) return reply('❌ No downloadable link found.');
 
+        const downloadLink = movie.pixeldrain_dl[2].link;
 
-	    
+        const caption = `
+🎬 *Title:* ${movie.title}
+📅 *Date:* ${movie.date}
+🌍 *Country:* ${movie.country}
+
+*💗 Powered by DIZER BOT*
+        `.trim();
+
+        await conn.sendMessage(from, {
+            image: { url: movie.image },
+            caption
+        }, { quoted: mek });
+
         const message = {
-            document: await getBuffer(data2),
-	    caption: `${data.result.data.pixeldrain_dl[2].size}\n*🎬 MOVIEDL 🎬*`,
+            document: await getBuffer(downloadLink),
             mimetype: "video/mp4",
-            fileName: `${data.result.data.title}.mp4`,
+            fileName: `${movie.title}.mp4`,
+            caption: `${movie.pixeldrain_dl[2].size}\n🎬 *MOVIEDL* 🎬`
         };
 
-
-	    
-        await conn.sendMessage(from, message );
-
+        await conn.sendMessage(from, message, { quoted: mek });
         await conn.sendMessage(from, { react: { text: '✅', key: mek.key } });
+
     } catch (error) {
-        console.error('Error fetching or sending', error);
-        await conn.sendMessage(from, '*Error fetching or sending *', { quoted: mek });
+        console.error('❌ Error:', error);
+        await reply('⚠️ Failed to download movie. Please try again.');
     }
 });
