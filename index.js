@@ -1,4 +1,3 @@
-
 const {
   default: makeWASocket,
   useMultiFileAuthState,
@@ -26,7 +25,6 @@ const ff = require('fluent-ffmpeg')
 const P = require('pino')
 const config = require('./config')
 const qrcode = require('qrcode-terminal')
-const StickersTypes = require('wa-sticker-formatter')
 const util = require('util')
 const {
   sms,
