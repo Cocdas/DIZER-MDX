@@ -17,6 +17,7 @@
     "util": "^0.12.4",
     "express": "latest",
     "async-g-i-s": "^1.4.0",
+    "ruhend-scraper": "^7.0.4",
     "file-type": "^16.5.3",
     "ytdl-core": "latest",
     "axios": "^1.2.5",
